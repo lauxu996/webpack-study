@@ -3,8 +3,6 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-//安装mini-css-extract-plugin插件进行样式文件的抽离
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 module.exports = { //webpack基于node.js
   mode:"development",
   //配置入口文件
@@ -38,9 +36,6 @@ module.exports = { //webpack基于node.js
           to: ''
         }
       ]
-    }),
-    new MiniCssExtractPlugin({
-      filename:'css/[name].[hash:8].css'
     })
   ],
   //module 用来处理各种后缀名不同的文件 ----- 万物皆为模块
@@ -49,16 +44,14 @@ module.exports = { //webpack基于node.js
       {
         test:/\.css$/,
         use:[//解析器解析规则 --- 从后到前
-          // {loader: 'style-loader'},
-          {loader: MiniCssExtractPlugin.loader},
+          {loader: 'style-loader'},
           {loader: 'css-loader'}
         ]
       },
       {
         test: /\.less$/, // 正则表达式，表示以css为结尾的文件
         use: [ // 解析器解析规则 ---- 从后到前
-          // { loader: 'style-loader' },
-          {loader: MiniCssExtractPlugin.loader},
+          { loader: 'style-loader' },
           { loader: 'css-loader' },
           { loader: 'less-loader' }
         ]

@@ -1,0 +1,9 @@
+body{
+  background-color:aqua;
+}
+#id{
+  width:500px;
+  height: 200px;
+  background-color: bisque;
+  font-size: 25px;
+}
