@@ -110,18 +110,4 @@ module.exports = {
       },
     ],
   },
-  devServer: {
-    port: 8080,
-    open:true,
-    proxy: {
-      '/api': {
-        target: 'http://121.89.205.189/api',
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
-    }
-  }
 };
