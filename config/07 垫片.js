@@ -5,9 +5,10 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 //安装mini-css-extract-plugin插件进行样式文件的抽离
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const autoprefixer = require("autoprefixer");
+
 /**
- * 配置webpack-dev-server进行热更新及代理
+ * babel-loader只会将 ES6/7/8语法转换为ES5语法，但是对新api并不会转换 例如(promise、Generator、Set、Maps、Proxy等)
+   此时我们需要借助babel-polyfill来帮助我们转换
  */
 //解析器的封装
 loadUse = (loader) => {
@@ -50,6 +51,7 @@ module.exports = {
   //配置入口文件
   entry: {
     app: "./src/index.js",
+    // app:["@babel/polyfill", path.resolve(__dirname,"../src/index.js")] //垫片使用写法1
   },
   output: {
     //path的路径为绝对路径
@@ -107,23 +109,46 @@ module.exports = {
         use: loadUse("less-loader"),
       },
       {
-        test: /\.stylus$/, 
-        use: loadUse('stylus-loader')
+        test: /\.stylus$/,
+        use: loadUse("stylus-loader"),
+      },
+      //处理js,使其兼容更多的环境
+      {
+        test: /\.js$/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [
+              [
+                "@babel/preset-env",
+                { useBuiltIns: "usage" }, //推荐实用写法：垫片写法2
+              ],
+            ], //处理js的高级语法
+            // 配置属性，排除错误
+            sourceType: "unambiguous",
+            plugins: [
+              // 插件
+              ["@babel/plugin-transform-runtime"],
+            ],
+          },
+        },
+        exclude: /node_modules/,
       },
     ],
   },
   devServer: {
     port: 8080,
-    open:true,
+    open: true,
     proxy: {
-      '/api': {
-        target: 'http://121.89.205.189/api',
+      "/api": {
+        target: "http://121.89.205.189/api",
         ws: true,
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
-        }
-      }
-    }
-  }
+          "^/api": "",
+        },
+      },
+    },
+  },
 };
+//

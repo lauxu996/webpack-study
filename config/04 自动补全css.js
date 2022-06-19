@@ -5,7 +5,6 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 //安装mini-css-extract-plugin插件进行样式文件的抽离
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const autoprefixer = require("autoprefixer");
 
 //解析器的封装
 loadUse = (loader) => {

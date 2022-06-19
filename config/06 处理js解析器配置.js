@@ -6,9 +6,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 //安装mini-css-extract-plugin插件进行样式文件的抽离
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const autoprefixer = require("autoprefixer");
-/**
- * 配置webpack-dev-server进行热更新及代理
- */
+
 //解析器的封装
 loadUse = (loader) => {
   const arr = [
@@ -110,6 +108,24 @@ module.exports = {
         test: /\.stylus$/, 
         use: loadUse('stylus-loader')
       },
+      //处理js,使其兼容更多的环境
+      {
+        test:/\.js$/,
+        use:{
+          loader:'babel-loader',
+          options:{
+            presets:['@babel/preset-env'], //处理js的高级语法
+            // 配置属性，排除错误
+            sourceType: 'unambiguous',
+            plugins: [ // 插件 
+              [
+                '@babel/plugin-transform-runtime'
+              ]
+            ]
+          }
+        },
+        exclude:/node_modules/
+      },
     ],
   },
   devServer: {
@@ -127,3 +143,4 @@ module.exports = {
     }
   }
 };
+//
